@@ -11,10 +11,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\body.c" />
     <ClCompile Include="..\src\collisions.c" />
     <ClCompile Include="..\src\entity.c" />
     <ClCompile Include="..\src\gametest3d.c" />
     <ClCompile Include="..\src\graphics3d.c" />
+    <ClCompile Include="..\src\mgl_callback.c" />
     <ClCompile Include="..\src\model.c" />
     <ClCompile Include="..\src\obj.c" />
     <ClCompile Include="..\src\shader.c" />
@@ -28,6 +30,7 @@
     <ClInclude Include="..\include\collisions.h" />
     <ClInclude Include="..\include\entity.h" />
     <ClInclude Include="..\include\graphics3d.h" />
+    <ClInclude Include="..\include\mgl_callback.h" />
     <ClInclude Include="..\include\model.h" />
     <ClInclude Include="..\include\obj.h" />
     <ClInclude Include="..\include\shader.h" />
