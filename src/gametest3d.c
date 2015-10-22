@@ -174,7 +174,7 @@ int main(int argc, char *argv[])
     cube2 = newCube(vec3d(0,-1.2,5.27),"Hobbes");
 	//cube1->rotation = vec3d(0,0,0);
 	//cube2->rotation = vec3d(0,0,0);
-	box1 = newBox(vec3d(0,0,3),"Box 1");
+	//box1 = newBox(vec3d(0,0,3),"Box 1");
 	
     
     cube2->body.velocity.x = 0.1;

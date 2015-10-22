@@ -441,7 +441,7 @@ void obj_draw(
 	 3,7,5,
 	 6,0,4,
 	 4,0,2};
-	float boxText [72] = {};
+	//float boxText [72] = {};
     if (obj == NULL)
     {
         slog("cannot draw obj, none specified!");
@@ -543,7 +543,7 @@ void obj_draw(
 	
 
 	//Bounding Box
-         for (i = 0; i <16 ; i++)
+      /*   for (i = 0; i <16 ; i++)
     {
         
         
@@ -583,7 +583,7 @@ void obj_draw(
         
     } 
        
-
+*/
     glEnd();
     
     glColor4f(1,1,1,1);
