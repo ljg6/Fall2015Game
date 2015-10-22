@@ -15,6 +15,7 @@ void obj_init()
     atexit(obj_close);
 }
 
+
 Obj *obj_new()
 {
     int i;
@@ -363,6 +364,9 @@ Obj *obj_load(char *filename)
 {
     FILE *file;
     Obj *objFile;
+	int i;
+	Vec3D min = {0,0,0};
+	Vec3D max = {0,0,0};
     
     objFile = obj_get_by_filename(filename);
     if (objFile)
@@ -394,7 +398,19 @@ Obj *obj_load(char *filename)
     
     obj_allocate(objFile);
     obj_file_parse(objFile, file);
-    
+
+     for (i = 0; i < objFile->num_vertices; i++)
+	 {
+	   if (objFile->vertex_array[i*3+0] < min.x) min.x = objFile->vertex_array[i*3+0];
+	   if (objFile->vertex_array[i*3+0] > max.x) max.x = objFile->vertex_array[i*3+0];
+	   if (objFile->vertex_array[i*1+0] < min.y) min.y = objFile->vertex_array[i*1+0];
+	   if (objFile->vertex_array[i*1+0] > max.y) max.y = objFile->vertex_array[i*1+0];
+	   if (objFile->vertex_array[i*2+0] < min.z) min.z = objFile->vertex_array[i*2+0];
+	   if (objFile->vertex_array[i*2+0] > max.z) max.z = objFile->vertex_array[i*2+0];
+	 }
+		objFile->size.x = max.x - min.x;
+		objFile->size.y = max.y - min.y;
+		objFile->size.z = max.z - min.z;
     fclose(file);
     
     return objFile;
@@ -406,18 +422,34 @@ void obj_draw(
     Vec3D rotation,
     Vec3D scale,
     Vec4D color,
-    Sprite *texture
+    Sprite *texture,
+	Vec3D *bb
              )
 {
     int i;
     ObjTriangle* triangle;
     float trans[4];
-    
+	int tris[36] = {0,1,2,
+	 2,1,3,
+	 2,3,4,
+	 4,3,5,
+	 4,5,6,
+	 6,5,7,
+	 6,7,0,
+	 0,7,1,
+	 1,7,3,
+	 3,7,5,
+	 6,0,4,
+	 4,0,2};
+	float boxText [72] = {};
     if (obj == NULL)
     {
         slog("cannot draw obj, none specified!");
         return;
     }
+
+
+
     glPushMatrix();
 
     glEnable(GL_LIGHTING);
@@ -508,6 +540,50 @@ void obj_draw(
             obj->vertex_array[triangle->p[2].v * 3 + 2]);
         
     }
+	
+
+	//Bounding Box
+         for (i = 0; i <16 ; i++)
+    {
+        
+        
+        
+            glTexCoord2f(
+                obj->texel_array[triangle->p[0].t * 2],
+                obj->texel_array[triangle->p[0].t * 2 + 1]
+            );
+        
+        glVertex3f(
+            bb[tris[i*3]].x,
+			bb[tris[i*3]].x,
+			bb[tris[i*3]].x,
+        );
+        
+        
+
+            glTexCoord2f(
+                obj->texel_array[triangle->p[1].t * 2],
+                obj->texel_array[triangle->p[1].t * 2 + 1]
+            );
+
+        glVertex3f(
+            obj->vertex_array[triangle->p[1].v * 3],
+            obj->vertex_array[triangle->p[1].v * 3 + 1],
+            obj->vertex_array[triangle->p[1].v * 3 + 2]);
+        
+            glTexCoord2f(
+                obj->texel_array[triangle->p[2].t * 2],
+                obj->texel_array[triangle->p[2].t * 2 + 1]
+            );
+        }
+        glVertex3f(
+            obj->vertex_array[triangle->p[2].v * 3],
+            obj->vertex_array[triangle->p[2].v * 3 + 1],
+            obj->vertex_array[triangle->p[2].v * 3 + 2]);
+        
+    } 
+       
+
     glEnd();
     
     glColor4f(1,1,1,1);

@@ -55,7 +55,7 @@ static void space_body_update(Space *space,Body *body)
     Vec3D stepVector;
     Vec3D stepOffVector;
     
-    if ((!body) || (body->_done))return;
+    if ((!body) || (body->_done) || (body->flagStatic != 0))return;
     
     vec3d_scale(stepVector,body->velocity,space->stepFactor);
     vec3d_negate(stepOffVector,stepVector);

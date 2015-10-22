@@ -9,6 +9,7 @@ typedef struct
 {
     Vec3D position;
     Vec3D velocity;
+	int flagStatic;
     Cube bounds;
     MglCallback touch;
     int  _needsBackoff;

@@ -81,10 +81,45 @@ void entity_draw_all()
 
 void entity_draw(Entity *ent)
 {
+	Vec3D box[8];
     if (!ent)
     {
         return;
     }
+
+	//making a bounding box cube.
+	box[0].x=ent->body.bounds.x;
+	box[0].y=ent->body.bounds.y-ent->body.bounds.h;
+	box[0].z=ent->body.bounds.z+ent->body.bounds.d;
+
+	box[1].x=ent->body.bounds.x+ent->body.bounds.w;
+	box[1].y=ent->body.bounds.y-ent->body.bounds.h;
+	box[1].z=ent->body.bounds.z+ent->body.bounds.d;
+	
+	box[2].x=ent->body.bounds.x;
+	box[2].y=ent->body.bounds.y;
+	box[2].z=ent->body.bounds.z+ent->body.bounds.d;
+
+	box[3].x=ent->body.bounds.x+ent->body.bounds.w;
+	box[3].y=ent->body.bounds.y;
+	box[3].z=ent->body.bounds.z+ent->body.bounds.d;
+	
+	box[4].x=ent->body.bounds.x;
+	box[4].y=ent->body.bounds.y;
+	box[4].z=ent->body.bounds.z;
+
+	box[5].x=ent->body.bounds.x+ent->body.bounds.w;
+	box[5].y=ent->body.bounds.y;
+	box[5].z=ent->body.bounds.z;
+	
+	box[6].x=ent->body.bounds.x;
+	box[6].y=ent->body.bounds.y-ent->body.bounds.h;
+	box[6].z=ent->body.bounds.z;
+
+	box[7].x=ent->body.bounds.x+ent->body.bounds.w;
+	box[7].y=ent->body.bounds.y-ent->body.bounds.h;
+	box[7].z=ent->body.bounds.z;
+
     obj_draw(
         ent->objModel,
         ent->body.position,

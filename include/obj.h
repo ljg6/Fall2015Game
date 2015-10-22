@@ -53,6 +53,7 @@ typedef struct
     float *normal_array;
     ObjTriangle *triangle_array;
     
+	Vec3D size;
     Uint8 used;             /**<refcount*/
 }Obj;
 

@@ -40,6 +40,8 @@
     <ClInclude Include="..\include\vector.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\shaders\fs1.glsl" />
+    <None Include="..\shaders\vs1.glsl" />
     <None Include="..\src\Makefile" />
     <None Include="..\src\makefile.dep" />
   </ItemGroup>

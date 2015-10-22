@@ -100,5 +100,11 @@
     <None Include="..\src\makefile.dep">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="..\shaders\fs1.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\shaders\vs1.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
