@@ -223,8 +223,8 @@ Entity *newDemoGun(Vec3D position,const char *name)
     {
         return NULL;
     }
-    ent->objModel = obj_load("models/techwall4.obj");
-     ent->texture = LoadSprite("models/walltexture.png",1024,1024);
+    ent->objModel = obj_load("models/techgun.obj");
+     ent->texture = LoadSprite("models/metal_bare_0002_02_preview.png",1024,1024);
     vec3d_cpy(ent->body.position,position);
 	
     cube_set(ent->body.bounds,-ent->objModel->size.x/2,-ent->objModel->size.y/2,-ent->objModel->size.z/2,ent->objModel->size.x,
@@ -244,8 +244,8 @@ Entity *newDemoKnife(Vec3D position,const char *name)
     {
         return NULL;
     }
-    ent->objModel = obj_load("models/techwall4.obj");
-     ent->texture = LoadSprite("models/walltexture.png",1024,1024);
+    ent->objModel = obj_load("models/techknife.obj");
+     ent->texture = LoadSprite("models/535_201305091401136611.png",1024,1024);
     vec3d_cpy(ent->body.position,position);
 	
     cube_set(ent->body.bounds,-ent->objModel->size.x/2,-ent->objModel->size.y/2,-ent->objModel->size.z/2,ent->objModel->size.x,
@@ -265,8 +265,8 @@ Entity *newDemoBrass(Vec3D position,const char *name)
     {
         return NULL;
     }
-    ent->objModel = obj_load("models/techwall4.obj");
-     ent->texture = LoadSprite("models/walltexture.png",1024,1024);
+    ent->objModel = obj_load("models/techbrass.obj");
+     ent->texture = LoadSprite("models/brass01.png",1024,1024);
     vec3d_cpy(ent->body.position,position);
 	
     cube_set(ent->body.bounds,-ent->objModel->size.x/2,-ent->objModel->size.y/2,-ent->objModel->size.z/2,ent->objModel->size.x,
@@ -277,7 +277,7 @@ Entity *newDemoBrass(Vec3D position,const char *name)
     mgl_callback_set(&ent->body.touch,touch_callback,ent);
     return ent;
 }
-
+/*
 Entity *newPlayer(Vec3D position,const char *name)
 {
     Entity * ent;
@@ -298,12 +298,13 @@ Entity *newPlayer(Vec3D position,const char *name)
     mgl_callback_set(&ent->body.touch,touch_callback,ent);
     return ent;
 }
-
+*/
 int main(int argc, char *argv[])
 {
     int i;
     float r = 0;
     Space *space;
+	//Entity *player;
     Entity *cube1,*cube2;
 	Entity *floor;
 	Entity *wall1, *wall2, *wall3, *wall4;
@@ -311,6 +312,9 @@ int main(int argc, char *argv[])
 	Entity *techdoor1;
 	Entity *wallCenter1, *wallCenter2;
 	Entity *demoTable1;
+	Entity *techgun1;
+	Entity *techknife1;
+	Entity *techbrass1;
 	Entity *box1;
     char bGameLoopRunning = 1;
     Vec3D cameraPosition = {0,-10,0.3};
@@ -336,6 +340,7 @@ int main(int argc, char *argv[])
     //bgtext = LoadSprite("models/mountain_text.png",1024,1024);
     
     floor = newFloor(vec3d(0,0,0),"TheFloor");  //vec3d(-2.26,-2.26,0)
+	//player = newPlayer(vec3d(0,-10,0.3),"Player");
 	techwall1 = newDemoWall(vec3d(0,0,0),"Wall 1");
 	techwall2 = newDemoWall(vec3d(8,0,0),"Wall 2");
 	techwall3 = newDemoWall(vec3d(0,4,0),"Wall 3");
@@ -343,6 +348,9 @@ int main(int argc, char *argv[])
 	techwall5 = newDemoWall(vec3d(4,0,0),"Wall 5");
 	techwall6 = newDemoWall(vec3d(0,0,0),"Wall 6");
 	techdoor1 = newDemoDoor(vec3d(0,0,0),"Door 1");
+	techgun1 = newDemoGun(vec3d(0,0,0),"Gun 1");
+	techknife1 = newDemoKnife(vec3d(0,0,0),"Knife 1");
+	techbrass1 = newDemoBrass(vec3d(0,0,0),"Brass 1");
 	wallCenter1 = newDemoWallCenter(vec3d(0,0,0),"Wall Center1");
 	wallCenter2 = newDemoWallCenter(vec3d(0,2.45,0),"Wall Center2");
 	demoTable1 = newDemoTable(vec3d(0,0,0),"Demo Table");
@@ -385,7 +393,11 @@ int main(int argc, char *argv[])
 	space_add_body(space,&techwall6->body);
 	space_add_body(space,&demoTable1->body);
 	space_add_body(space,&wallCenter1->body);
+	//space_add_body(space,&player->body);
 	//space_add_body(space,&wall1->body);
+	space_add_body(space,&techgun1->body);
+	space_add_body(space,&techknife1->body);
+	space_add_body(space,&techknife1->body);
     while (bGameLoopRunning)
     {
         for (i = 0; i < 100;i++)
@@ -459,18 +471,22 @@ int main(int argc, char *argv[])
                 else if (e.key.keysym.sym == SDLK_LEFT)
                 {
                     cameraRotation.z += 1;
+					//newplayer.z += 1;
                 }
                 else if (e.key.keysym.sym == SDLK_RIGHT)
                 {
                     cameraRotation.z -= 1;
+					//newplayer.z -= 1;
                 }
                 else if (e.key.keysym.sym == SDLK_UP)
                 {
                     cameraRotation.x += 1;
+					//newplayer.x += 1;
                 }
                 else if (e.key.keysym.sym == SDLK_DOWN)
                 {
                     cameraRotation.x -= 1;
+					//player.x -= 1;
                 }
             }
 			else if (e.type == SDL_MOUSEMOTION)
