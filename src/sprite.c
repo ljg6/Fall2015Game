@@ -78,15 +78,15 @@ Sprite *LoadSprite(char *filename,int fw, int fh)
     
     // You should probably use CSurface::OnLoad ... ;)
     //-- and make sure the Surface pointer is good!
-    glGenTextures(1, &sprite->texture);
-    glBindTexture(GL_TEXTURE_2D, sprite->texture);
+    glGenTextures(1, &sprite->texture); //Save me a spot in GPU Ram
+    glBindTexture(GL_TEXTURE_2D, sprite->texture); //Use that spot for a texture
     
     
     if(sprite->image->format->BytesPerPixel == 4) {
         Mode = GL_RGBA;
     }
     
-    glTexImage2D(GL_TEXTURE_2D, 0, Mode, sprite->image->w, sprite->image->h, 0, Mode, GL_UNSIGNED_BYTE, sprite->image->pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, Mode, sprite->image->w, sprite->image->h, 0, Mode, GL_UNSIGNED_BYTE, sprite->image->pixels);//I'm sending you data for that spot
     
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);    

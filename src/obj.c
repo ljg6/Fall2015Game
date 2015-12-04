@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include "obj.h"
 #include "simple_logger.h"
+#include "entity.h"
+
+extern GLuint		 __graphics3d_vertex_buffer;
 
 #define __obj_max 1024
 
@@ -365,8 +368,10 @@ Obj *obj_load(char *filename)
     FILE *file;
     Obj *objFile;
 	int i;
-	Vec3D min = {0,0,0};
-	Vec3D max = {0,0,0};
+	Vec3D min = {999999.0f,9999999.0f,9999999.0f};
+	Vec3D max = {-999.0f,-999.0f,-999.0f};
+
+	Vec3D center;
     
     objFile = obj_get_by_filename(filename);
     if (objFile)
@@ -403,44 +408,38 @@ Obj *obj_load(char *filename)
 	 {
 	   if (objFile->vertex_array[i*3+0] < min.x) min.x = objFile->vertex_array[i*3+0];
 	   if (objFile->vertex_array[i*3+0] > max.x) max.x = objFile->vertex_array[i*3+0];
-	   if (objFile->vertex_array[i*1+0] < min.y) min.y = objFile->vertex_array[i*1+0];
-	   if (objFile->vertex_array[i*1+0] > max.y) max.y = objFile->vertex_array[i*1+0];
-	   if (objFile->vertex_array[i*2+0] < min.z) min.z = objFile->vertex_array[i*2+0];
-	   if (objFile->vertex_array[i*2+0] > max.z) max.z = objFile->vertex_array[i*2+0];
+	   if (objFile->vertex_array[i*3+1] < min.y) min.y = objFile->vertex_array[i*3+1];
+	   if (objFile->vertex_array[i*3+1] > max.y) max.y = objFile->vertex_array[i*3+1];
+	   if (objFile->vertex_array[i*3+2] < min.z) min.z = objFile->vertex_array[i*3+2];
+	   if (objFile->vertex_array[i*3+2] > max.z) max.z = objFile->vertex_array[i*3+2];
+	 }
+
+	 center.x = (min.x+max.x)/2;
+	 center.y = (min.y+max.y)/2;
+	 center.z = (min.z+max.z)/2;
+     for (i = 0; i < objFile->num_vertices; i++)
+	 {
+		 objFile->vertex_array[i*3+0]-=center.x;
+		 objFile->vertex_array[i*3+1]-=center.y;
+		 objFile->vertex_array[i*3+2]-=center.z;
 	 }
 		objFile->size.x = max.x - min.x;
 		objFile->size.y = max.y - min.y;
 		objFile->size.z = max.z - min.z;
-    fclose(file);
+    
+		
+		fclose(file);
     
     return objFile;
 }
 
-void obj_draw(
-    Obj *obj,
-    Vec3D position,
-    Vec3D rotation,
-    Vec3D scale,
-    Vec4D color,
-    Sprite *texture,
-	Vec3D *bb
-             )
+void obj_draw(Obj *obj, Vec3D position, Vec3D rotation, Vec3D scale, Vec4D color, Sprite *texture, Vec3D *bb)
 {
     int i;
+	Vec3D verts[10000];
     ObjTriangle* triangle;
     float trans[4];
-	int tris[36] = {0,1,2,
-	 2,1,3,
-	 2,3,4,
-	 4,3,5,
-	 4,5,6,
-	 6,5,7,
-	 6,7,0,
-	 0,7,1,
-	 1,7,3,
-	 3,7,5,
-	 6,0,4,
-	 4,0,2};
+	glBindBuffer(GL_ARRAY_BUFFER,__graphics3d_vertex_buffer);
 	//float boxText [72] = {};
     if (obj == NULL)
     {

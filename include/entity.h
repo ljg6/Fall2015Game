@@ -50,5 +50,9 @@ void entity_draw(Entity *ent);
 void entity_free(Entity *ent);
 
 int entity_is_entity(void *data);
+void drawBB(Entity *ent);
 
+
+extern Entity bb_Entity;
+extern int bbOn;
 #endif

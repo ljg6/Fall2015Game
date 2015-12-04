@@ -91,14 +91,7 @@ void obj_free(Obj *obj);
  * @param color the r,g,b,a value for the model as a whole
  * @param texture [optional] if provided, render with texture
  */
-void obj_draw(
-    Obj *obj,
-    Vec3D position,
-    Vec3D rotation,
-    Vec3D scale,
-    Vec4D color,
-    Sprite *texture
-);
+//void obj_draw(Obj *obj,Vec3D position,Vec3D rotation,Vec3D scale,Vec4D color,Sprite *texture);
 
 
 #endif

@@ -30,6 +30,8 @@
 #include "entity.h"
 #include "space.h"
 
+
+int bbOn = 0;
 void set_camera(Vec3D position, Vec3D rotation);
 
 void touch_callback(void *data, void *context)
@@ -61,10 +63,10 @@ Entity *newCube(Vec3D position,const char *name)
     ent->objModel = obj_load("models/chair.obj");
     ent->texture = LoadSprite("models/outUVcarp.png",1024,1024);
     vec3d_cpy(ent->body.position,position);
-	slog("wall size %f,%f,%f",ent->objModel->size.x,ent->objModel->size.y,ent->objModel->size.z);
+	//slog("wall size %f,%f,%f",ent->objModel->size.x,ent->objModel->size.y,ent->objModel->size.z);
     cube_set(ent->body.bounds,-ent->objModel->size.x/2,-ent->objModel->size.y/2,-ent->objModel->size.z/2,ent->objModel->size.x,
-		ent->objModel->size.y,
-	ent->objModel->size.z);
+		ent->objModel->size.y,ent->objModel->size.z);
+
     sprintf(ent->name,"%s",name);
     mgl_callback_set(&ent->body.touch,touch_callback,ent);
     return ent;
@@ -78,12 +80,11 @@ Entity *newFloor(Vec3D position,const char *name)
         return NULL;
     }
     ent->objModel = obj_load("models/demofloor.obj");
-    ent->texture = LoadSprite("models/floorcarpet.png",1024,1024);
+    ent->texture = LoadSprite("models/floorcarpet.png",-1,-1);
     vec3d_cpy(ent->body.position,position);
 	
     cube_set(ent->body.bounds,-ent->objModel->size.x/2,-ent->objModel->size.y/2,-ent->objModel->size.z/2,ent->objModel->size.x,
-		ent->objModel->size.y,
-	ent->objModel->size.z);
+		ent->objModel->size.y,ent->objModel->size.z);
     sprintf(ent->name,"%s",name);
     mgl_callback_set(&ent->body.touch,touch_callback,ent);
     return ent;
@@ -142,10 +143,8 @@ Entity *newDemoWall(Vec3D position,const char *name)
     ent->objModel = obj_load("models/techwall1.obj");
     ent->texture = LoadSprite("models/walltexture.png",1024,1024);
     vec3d_cpy(ent->body.position,position);
-	
     cube_set(ent->body.bounds,-ent->objModel->size.x/2,-ent->objModel->size.y/2,-ent->objModel->size.z/2,ent->objModel->size.x,
-		ent->objModel->size.y,
-	ent->objModel->size.z);
+		ent->objModel->size.y,ent->objModel->size.z);
 		
     sprintf(ent->name,"%s",name);
     mgl_callback_set(&ent->body.touch,touch_callback,ent);
@@ -245,7 +244,7 @@ Entity *newDemoKnife(Vec3D position,const char *name)
         return NULL;
     }
     ent->objModel = obj_load("models/techknife.obj");
-     ent->texture = LoadSprite("models/535_201305091401136611.png",1024,1024);
+     ent->texture = LoadSprite("models/metal_bare_0002_02_preview",1024,1024);
     vec3d_cpy(ent->body.position,position);
 	
     cube_set(ent->body.bounds,-ent->objModel->size.x/2,-ent->objModel->size.y/2,-ent->objModel->size.z/2,ent->objModel->size.x,
@@ -339,20 +338,22 @@ int main(int argc, char *argv[])
     //bgobj = obj_load("models/mountainvillage.obj");
     //bgtext = LoadSprite("models/mountain_text.png",1024,1024);
     
-    floor = newFloor(vec3d(0,0,0),"TheFloor");  //vec3d(-2.26,-2.26,0)
+    cube1 = newCube(vec3d(10,-1.2,.5),"Cubert");  //(vec3d(0,-1.2,0)
+    cube2 = newCube(vec3d(0,0,2),"Hobbes");
+	floor = newFloor(vec3d(0,0,0),"TheFloor");  //vec3d(-2.26,-2.26,0)
 	//player = newPlayer(vec3d(0,-10,0.3),"Player");
 	techwall1 = newDemoWall(vec3d(0,0,0),"Wall 1");
-	techwall2 = newDemoWall(vec3d(8,0,0),"Wall 2");
-	techwall3 = newDemoWall(vec3d(0,4,0),"Wall 3");
-	techwall4 = newDemoWall(vec3d(4,4,0),"Wall 4");
-	techwall5 = newDemoWall(vec3d(4,0,0),"Wall 5");
-	techwall6 = newDemoWall(vec3d(0,0,0),"Wall 6");
-	techdoor1 = newDemoDoor(vec3d(0,0,0),"Door 1");
-	techgun1 = newDemoGun(vec3d(0,0,0),"Gun 1");
-	techknife1 = newDemoKnife(vec3d(0,0,0),"Knife 1");
-	techbrass1 = newDemoBrass(vec3d(0,0,0),"Brass 1");
+	techwall2 = newDemoWall(vec3d(8,0,0),"Wall 2"); //(8,0,0)
+	techwall3 = newDemoWall(vec3d(0,4,0),"Wall 3"); //(0,4,0)
+	techwall4 = newDemoWall(vec3d(4,4,0),"Wall 4"); //(4,4,0)
+	techwall5 = newDemoWall(vec3d(4,0,0),"Wall 5"); //(4,0,0)
+	techwall6 = newDemoWall(vec3d(0,0,0),"Wall 6"); 
+	techdoor1 = newDemoDoor(vec3d(0,0,0),"Door 1"); 
+	techgun1 = newDemoGun(vec3d(0,0,0),"Gun 1"); 
+	techknife1 = newDemoKnife(vec3d(0,0,0),"Knife 1"); 
+	techbrass1 = newDemoBrass(vec3d(0,0,0),"Brass 1"); 
 	wallCenter1 = newDemoWallCenter(vec3d(0,0,0),"Wall Center1");
-	wallCenter2 = newDemoWallCenter(vec3d(0,2.45,0),"Wall Center2");
+	wallCenter2 = newDemoWallCenter(vec3d(0,2.45,0),"Wall Center2"); //(0,2.45,0)
 	demoTable1 = newDemoTable(vec3d(0,0,0),"Demo Table");
 
 	techwall3->rotation =vec3d(0,0,90);
@@ -366,14 +367,12 @@ int main(int argc, char *argv[])
 	wall3 = newWall(vec3d(-1.5,-1.5,1.5),"Wall 3");
 	//wall3->rotation =vec3d(0,0,90);
 	//wall4 = newWall(vec3d(0,0,0),"Wall 4",vec3d(-2.26,-2.26,0),vec3d(4.52,4.52,1));*/
-	cube1 = newCube(vec3d(10,-1.2,.5),"Cubert");  //(vec3d(0,-1.2,0)
-    //cube2 = newCube(vec3d(0,-1.2,5.27),"Hobbes");
 	//cube1->rotation = vec3d(0,0,0);
 	//cube2->rotation = vec3d(0,0,0);
 	//box1 = newBox(vec3d(0,0,3),"Box 1");
 	
     
-    //cube2->body.velocity.x = 0.1;
+    cube2->body.velocity.z = 0.1;
 	cube1->body.velocity.x = -0.1;
 	//wall1->body.velocity.z = -0.1;
 	//wall2->body.velocity.z = -0.1;
@@ -412,7 +411,10 @@ int main(int argc, char *argv[])
             }
             else if (e.type == SDL_KEYDOWN)
             {
-                if (e.key.keysym.sym == SDLK_ESCAPE)
+				if(e.key.keysym.sym == SDLK_b)
+				{
+					bbOn = !bbOn;
+				}else if (e.key.keysym.sym == SDLK_ESCAPE)
                 {
                     bGameLoopRunning = 0;
                 }
@@ -471,17 +473,17 @@ int main(int argc, char *argv[])
                 else if (e.key.keysym.sym == SDLK_LEFT)
                 {
                     cameraRotation.z += 1;
-					//newplayer.z += 1;
+					//player.position.z += 1;
                 }
                 else if (e.key.keysym.sym == SDLK_RIGHT)
                 {
                     cameraRotation.z -= 1;
-					//newplayer.z -= 1;
+					//player.pos.z -= 1;
                 }
                 else if (e.key.keysym.sym == SDLK_UP)
                 {
                     cameraRotation.x += 1;
-					//newplayer.x += 1;
+					//player.x += 1;
                 }
                 else if (e.key.keysym.sym == SDLK_DOWN)
                 {

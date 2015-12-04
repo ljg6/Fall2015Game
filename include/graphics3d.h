@@ -61,4 +61,7 @@ void graphics3d_frame_begin();
  */
 void graphics3d_next_frame();
 
+GLuint graphics3d_get_vertex_buffer();
+GLuint graphics3d_get_uv_buffer();
+GLuint graphics3d_get_normals_buffer();
 #endif

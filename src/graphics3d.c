@@ -2,18 +2,37 @@
 #include "simple_logger.h"
 #include "shader.h"
 #include <GL/glu.h>
+#include "entity.h"
 
 
 static SDL_GLContext __graphics3d_gl_context;
 static SDL_Window  * __graphics3d_window = NULL;
 static GLuint        __graphics3d_shader_program;
 static Uint32        __graphics3d_frame_delay = 33;
+GLuint		 __graphics3d_vertex_buffer;
+GLuint		 __graphics3d_uv_buffer;
+GLuint		 __graphics3d_normals_buffer;
 
 void graphics3d_close();
 
 GLuint graphics3d_get_shader_program()
 {
     return __graphics3d_shader_program;
+}
+
+GLuint graphics3d_get_vertex_buffer()
+{
+    return __graphics3d_vertex_buffer;
+}
+
+GLuint graphics3d_get_uv_buffer()
+{
+    return __graphics3d_uv_buffer;
+}
+
+GLuint graphics3d_get_normals_buffer()
+{
+    return __graphics3d_normals_buffer;
 }
 
 void graphics3d_setup_default_light();
@@ -88,6 +107,9 @@ int graphics3d_init(int sw,int sh,int fullscreen,const char *project,Uint32 fram
     
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
+	
+	bb_Entity.objModel = obj_load("models/alphaBox.obj");
+    bb_Entity.texture = LoadSprite("models/NewAlphaUV",512,512);
     
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
@@ -97,6 +119,9 @@ int graphics3d_init(int sw,int sh,int fullscreen,const char *project,Uint32 fram
     
     graphics3d_setup_default_light();
     atexit(graphics3d_close);
+	glGenBuffers(1,&__graphics3d_vertex_buffer);
+	glGenBuffers(1,&__graphics3d_uv_buffer);
+	glGenBuffers(1,&__graphics3d_normals_buffer);
     return 0;
 }
 
@@ -176,6 +201,21 @@ void graphics3d_setup_default_light()
     glEnable(GL_LIGHT1);
     glEnable(GL_DEPTH_TEST);
     
+}
+
+void draw_cube(Vec3D box[8],Vec4D color)
+{
+	glPushMatrix();
+	glEnable(GL_LIGHTING);
+    glEnable(GL_BLEND);
+    glEnable(GL_NORMALIZE);
+    glColorMaterial(GL_FRONT,GL_DIFFUSE);
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
+	glDisable(GL_NORMALIZE);
+	glDisable(GL_BLEND);
+	glDisable(GL_LIGHTING);
+	glPopMatrix();
 }
 
 
