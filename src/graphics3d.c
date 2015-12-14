@@ -53,7 +53,7 @@ int graphics3d_init(int sw,int sh,int fullscreen,const char *project,Uint32 fram
     __graphics3d_window = SDL_CreateWindow(project?project:"gametest3d",
                               SDL_WINDOWPOS_UNDEFINED,
                               SDL_WINDOWPOS_UNDEFINED,
-                              sw, sh,
+                              1024, 768,
                               SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
     
     
@@ -98,7 +98,7 @@ int graphics3d_init(int sw,int sh,int fullscreen,const char *project,Uint32 fram
     glLoadIdentity();
     /*view angle, aspect ratio, near clip distance, far clip distance*/
     /*TODO: put near/far clip in graphics view config*/
-    gluPerspective( 40, (float)sw / (float)sh, .01, 2000.0f);
+    gluPerspective( 45, (float)sw / (float)sh, .01, 2000.0f);
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
 
@@ -135,6 +135,7 @@ void graphics3d_frame_begin()
     glClearColor(0.0,0.0,0.0,0.0);
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     glLoadIdentity();
+	glTranslatef(0.0f,0.0f,-1.0f);
     glPushMatrix();
 }
 
@@ -142,7 +143,7 @@ void graphics3d_next_frame()
 {
     static Uint32 then = 0;
     Uint32 now;
-    glPopMatrix();
+    //glPopMatrix();
     SDL_GL_SwapWindow(__graphics3d_window);
     now = SDL_GetTicks();
     if ((now - then) < __graphics3d_frame_delay)

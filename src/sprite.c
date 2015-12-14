@@ -1,7 +1,7 @@
 #include "sprite.h"
 #include "simple_logger.h"
 #include "graphics3d.h"
-
+#include <stdio.h>
 #include <SDL_image.h>
 
 #define MaxSprites    1024
@@ -66,6 +66,7 @@ Sprite *LoadSprite(char *filename,int fw, int fh)
         return NULL;
     }
     sprite->image = image;
+	sprintf(sprite->filename,"%s",filename);
     if (fw == -1)
     {
         sprite->w = sprite->image->w;
