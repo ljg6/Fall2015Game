@@ -264,7 +264,17 @@ void drawBB(Entity *ent)
 
 
 
-
+void cleanup_entities()
+{
+    int i;
+    for (i = 0;i < __entity_max;i++)
+    {
+		if (__entity_list[i].inuse && __entity_list[i].destroy)
+        {
+            entity_free(&__entity_list[i]);
+        }
+    }
+}
 
 
 

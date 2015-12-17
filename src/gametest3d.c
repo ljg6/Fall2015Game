@@ -456,6 +456,30 @@ void touch_inventory_callback(void *data, void *context)
    
 }
 
+void touch_destroy_callback(void *data, void *context)
+{
+    Entity *me,*other;
+    Body *obody;
+    if ((!data)||(!context))return;
+    me = (Entity *)data;
+    obody = (Body *)context;
+    if (entity_is_entity(obody->touch.data))
+    {
+        other = (Entity *)obody->touch.data;
+		if(other == player && items[ITEM_PAPERS] == 1)
+		{
+			items[ITEM_PAPERS] = 0;
+			me->destroy = 1;
+		}
+        //slog("%s is ",other->name);
+    }
+    //slog("touching me.... touching youuuuuuuu");
+	me->body.velocity.x=0;
+	me->body.velocity.y=0;
+	me->body.velocity.z=0;
+}
+
+
 Entity *newCube(Vec3D position,const char *name)
 {
     Entity * ent;
@@ -576,6 +600,25 @@ Entity *newDemoWall(Vec3D position,const char *name)
     return ent;
 }
 
+Entity *newOutDemoWall(Vec3D position,const char *name)
+{
+    Entity * ent;
+    ent = entity_new();
+    if (!ent)
+    {
+        return NULL;
+    }
+    ent->objModel = obj_load("models/outwall.obj");
+    ent->texture = LoadSprite("models/outwalluv.png",1024,1024);
+    vec3d_cpy(ent->body.position,position);
+    cube_set(ent->body.bounds,-ent->objModel->size.x/2,-ent->objModel->size.y/2,-ent->objModel->size.z/2,ent->objModel->size.x,
+		ent->objModel->size.y,ent->objModel->size.z);
+		
+    sprintf(ent->name,"%s",name);
+    mgl_callback_set(&ent->body.touch,touch_callback,ent);
+    return ent;
+}
+
 Entity *newDemoWallCenter(Vec3D position,const char *name)
 {
     Entity * ent;
@@ -614,7 +657,7 @@ Entity *newDemoDoor(Vec3D position,const char *name)
 	ent->objModel->size.z);
 		
     sprintf(ent->name,"%s",name);
-    mgl_callback_set(&ent->body.touch,touch_callback,ent);
+    mgl_callback_set(&ent->body.touch,touch_destroy_callback,ent);
     return ent;
 }
 
@@ -739,7 +782,8 @@ int main(int argc, char *argv[])
     Entity *cube1,*cube2;
 	Entity *floor1, *floor2, *floor3, *floor4;
 	Entity *wall1, *wall2, *wall3, *wall4;
-	Entity *techwall1, *techwall2, *techwall3, *techwall4, *techwall5, *techwall6, *techwall7, *techwall8;
+	//Entity *techwall1, *techwall2, *techwall3, *techwall4, *techwall5, *techwall6, *techwall7, *techwall8;
+	//Entity *outerwall1, *outerwall2, *outerwall3, *outerwall4;
 	Entity *techdoor1;
 	Entity *wallCenter1, *wallCenter2;
 	Entity *demoTable1;
@@ -748,7 +792,7 @@ int main(int argc, char *argv[])
 	Entity *techbrass1;
 	Entity *box1;
     char bGameLoopRunning = 1;
-    Vec3D cameraPosition = {0,-10,0.3};
+    Vec3D cameraPosition = {-2,-2,0.3};
     Vec3D cameraRotation = {90,0,0};
     SDL_Event e;
     //Obj *bgobj;
@@ -784,13 +828,17 @@ int main(int argc, char *argv[])
 	floor3 = newFloor(vec3d(0,8,-0.6),"TheFloor 3");
 	floor4 = newFloor(vec3d(8,8,-0.6),"TheFloor 4");
 	player = newPlayer(vec3d(0,-10,0.3),"Player");
-	techwall1 = newDemoWall(vec3d(10,0,0),"Wall 1");
-	techwall2 = newDemoWall(vec3d(0,0,0),"Wall 2"); //(8,0,0)
-	techwall3 = newDemoWall(vec3d(0,0,0),"Wall 3"); //(0,4,0)
-	techwall4 = newDemoWall(vec3d(0,0,0),"Wall 4"); //(4,4,0)
-	techwall5 = newDemoWall(vec3d(0,0,0),"Wall 5"); //(4,0,0)
-	techwall6 = newDemoWall(vec3d(0,0,0),"Wall 6"); 
-	techdoor1 = newDemoDoor(vec3d(0,0,0),"Door 1"); 
+	//techwall1 = newDemoWall(vec3d(10,0,0),"Wall 1");
+	//techwall2 = newDemoWall(vec3d(0,0,0),"Wall 2"); //(8,0,0)
+	//techwall3 = newDemoWall(vec3d(0,0,0),"Wall 3"); //(0,4,0)
+	//techwall4 = newDemoWall(vec3d(0,0,0),"Wall 4"); //(4,4,0)
+	//techwall5 = newDemoWall(vec3d(0,0,0),"Wall 5"); //(4,0,0)
+	//techwall6 = newDemoWall(vec3d(0,0,0),"Wall 6");
+	//outerwall1= newOutDemoWall(vec3d(12,4,0),"OWall 1");
+	//outerwall2= newOutDemoWall(vec3d(-4,4,0),"OWall 2");
+	//outerwall3= newOutDemoWall(vec3d(4,12,0),"OWall 3");
+	//outerwall4= newOutDemoWall(vec3d(4,-4,0),"OWall 4");
+	techdoor1 = newDemoDoor(vec3d(-5,0,0),"Door 1"); 
 	techgun1 = newDemoGun(vec3d(0,0,0),"Gun 1"); 
 	techknife1 = newDemoKnife(vec3d(0,0,0),"Knife 1"); 
 	techbrass1 = newCube(vec3d(6,0,0),"Brass 1"); 
@@ -798,10 +846,15 @@ int main(int argc, char *argv[])
 	wallCenter2 = newDemoWallCenter(vec3d(0,0,0),"Wall Center2"); //(0,2.45,0)
 	demoTable1 = newDemoTable(vec3d(0,0,-0.35),"Demo Table");
 
-	techwall3->rotation =vec3d(0,0,0); //(0,0,90)
-	techwall4->rotation =vec3d(0,0,0); //(0,0,90)
-	techwall5->rotation =vec3d(0,0,0); //(0,0,90)
-	techwall6->rotation =vec3d(0,0,0); //(0,0,90)
+	//techwall3->rotation =vec3d(0,0,0); //(0,0,90)
+	//techwall4->rotation =vec3d(0,0,0); //(0,0,90)
+	//techwall5->rotation =vec3d(0,0,0); //(0,0,90)
+	//techwall6->rotation =vec3d(0,0,0); //(0,0,90)
+
+	//outerwall1->rotation =vec3d(0,0,90);
+	//outerwall2->rotation =vec3d(0,0,90);
+	//outerwall3->rotation =vec3d(0,0,0);
+	//outerwall4->rotation =vec3d(0,0,0);
 
 	/*wall1 = newWall(vec3d(1.5,-1.5,1.5),"Wall 1");
 	wall2 = newWall(vec3d(0,0,.5),"Wall 2");
@@ -814,8 +867,8 @@ int main(int argc, char *argv[])
 	//box1 = newBox(vec3d(0,0,3),"Box 1");
 	
     
-    cube2->body.velocity.z = 0.1;
-	cube1->body.velocity.x = -0.1;
+    //cube2->body.velocity.z = 0.1;
+	cube1->body.velocity.x = -0.001;
 	//wall1->body.velocity.z = -0.1;
 	//wall2->body.velocity.z = -0.1;
 	//wall3->body.velocity.z = -0.1;
@@ -828,13 +881,17 @@ int main(int argc, char *argv[])
 	space_add_body(space,&floor3->body);
 	space_add_body(space,&floor4->body);
 	space_add_body(space,&cube1->body);
-    //space_add_body(space,&cube2->body);
-	space_add_body(space,&techwall1->body);
-	space_add_body(space,&techwall2->body);
-	space_add_body(space,&techwall3->body);
-	space_add_body(space,&techwall4->body);
-	space_add_body(space,&techwall5->body);
-	space_add_body(space,&techwall6->body);
+    space_add_body(space,&techdoor1->body);
+	//space_add_body(space,&techwall1->body);
+	//space_add_body(space,&techwall2->body);
+	//space_add_body(space,&techwall3->body);
+	//space_add_body(space,&techwall4->body);
+	//space_add_body(space,&techwall5->body);
+	//space_add_body(space,&techwall6->body);
+	//space_add_body(space,&outerwall1->body);
+	//space_add_body(space,&outerwall2->body);
+	//space_add_body(space,&outerwall3->body);
+	//space_add_body(space,&outerwall4->body);
 	space_add_body(space,&demoTable1->body);
 	space_add_body(space,&wallCenter1->body);
 	space_add_body(space,&player->body);
@@ -848,7 +905,7 @@ int main(int argc, char *argv[])
 	{
 		items[i]=0;
 	}
-
+	items[ITEM_PAPERS] = 1;
 	current_Time = SDL_GetTicks();
     while (bGameLoopRunning)
     {
@@ -865,6 +922,8 @@ int main(int argc, char *argv[])
         }
 		player->body.velocity.y =0;
 		player->body.velocity.x =0;
+
+		
         while ( SDL_PollEvent(&e) ) 
         {
             if (e.type == SDL_QUIT)
@@ -1006,6 +1065,7 @@ int main(int argc, char *argv[])
 		glPopMatrix();
         /* drawing code above here! */
         graphics3d_next_frame();
+		 cleanup_entities();
     } 
     return 0;
 }

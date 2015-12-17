@@ -21,6 +21,7 @@ typedef struct Entity_S
     Sprite *texture;    /**<object texture*/
     Body body;
 	int type;
+	int destroy;
 }Entity;
 
 /**
@@ -51,6 +52,11 @@ void entity_draw(Entity *ent);
  */
 void entity_free(Entity *ent);
 
+
+/**
+ * @brief destroys marked entities
+ */
+void cleanup_entities();
 int entity_is_entity(void *data);
 void drawBB(Entity *ent);
 
